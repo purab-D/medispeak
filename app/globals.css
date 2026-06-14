@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6fbff;
+  --foreground: #102033;
 }
 
 @theme inline {
@@ -12,15 +12,198 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+::selection {
+  background: #bfdbfe;
+  color: #0f172a;
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+.medical-backdrop {
+  background:
+    radial-gradient(circle at 10% 8%, rgba(96, 165, 250, 0.16), transparent 32%),
+    radial-gradient(circle at 86% 10%, rgba(45, 212, 191, 0.12), transparent 28%),
+    linear-gradient(180deg, #f6fbff 0%, #ffffff 48%, #f0f9ff 100%);
+}
+
+.medical-mesh {
+  background-image:
+    linear-gradient(rgba(37, 99, 235, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.035) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(to bottom, black 0%, transparent 82%);
+}
+
+.health-glass,
+.health-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(214, 231, 249, 0.95);
+  border-radius: 8px;
+  box-shadow:
+    0 14px 34px rgba(15, 82, 150, 0.075),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+}
+
+.health-card {
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.medical-logo {
+  animation: soft-glow 4.8s ease-in-out infinite;
+}
+
+.medical-pulse-dot {
+  animation: pulse-dot 2.8s ease-in-out infinite;
+  background: #14b8a6;
+  border-radius: 999px;
+  box-shadow: 0 0 0 5px rgba(20, 184, 166, 0.12);
+  height: 8px;
+  width: 8px;
+}
+
+.care-step {
+  align-items: center;
+  border-radius: 8px;
+  border-width: 1px;
+  display: flex;
+  gap: 10px;
+  min-height: 62px;
+  padding: 12px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.care-icon,
+.section-icon {
+  align-items: center;
+  border-radius: 8px;
+  display: inline-flex;
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  height: 32px;
+  justify-content: center;
+  width: 32px;
+}
+
+.result-section {
+  border-radius: 8px;
+  border-width: 1px;
+  padding: 16px;
+}
+
+.patient-report-section {
+  border-radius: 8px;
+  border-style: solid;
+  border-width: 1px;
+  box-shadow:
+    0 8px 20px rgba(15, 82, 150, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  padding: 18px;
+}
+
+.accordion-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 260ms ease,
+    opacity 180ms ease;
+}
+
+.accordion-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.accordion-panel > div {
+  overflow: hidden;
+}
+
+.section-heading {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
+.section-heading h3 {
+  color: #0f172a;
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.loading-bar {
+  animation: loading-bar 1.5s ease-in-out infinite;
+  transform-origin: left;
+}
+
+.custom-scroll {
+  scrollbar-color: rgba(37, 99, 235, 0.36) rgba(226, 232, 240, 0.8);
+  scrollbar-width: thin;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: rgba(226, 232, 240, 0.75);
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #2563eb, #14b8a6);
+  border: 3px solid rgba(248, 250, 252, 0.9);
+  border-radius: 999px;
+}
+
+@keyframes soft-glow {
+  0%,
+  100% {
+    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.14);
+  }
+  50% {
+    box-shadow: 0 12px 26px rgba(20, 184, 166, 0.16);
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.18);
+  }
+}
+
+@keyframes loading-bar {
+  0% {
+    transform: scaleX(0.18);
+  }
+  50% {
+    transform: scaleX(0.78);
+  }
+  100% {
+    transform: scaleX(0.18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
 }
