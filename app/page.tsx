@@ -70,6 +70,12 @@ type PrescriptionDetail = {
   power?: string;
 };
 
+const DEMO_MODE = false;
+const AI_BUSY_MESSAGE =
+  "The AI service is currently busy. Please try again in a few moments.";
+const AI_BUSY_MESSAGE_KANNADA =
+  "AI ಸೇವೆ ಈಗ ಬ್ಯುಸಿಯಾಗಿದೆ. ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ಹೊತ್ತಿನ ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.";
+
 const sampleReports: SampleReport[] = [
   {
     title: "CBC Anemia",
@@ -102,6 +108,67 @@ Findings: Complex tear of posterior horn of medial meniscus. Mild joint effusion
 Impression: Medial meniscus tear with mild degenerative cartilage change.`,
   },
 ];
+
+const demoExplanations: Record<ReportLanguage, string> = {
+  english: `## Executive Summary
+This looks like a Complete Blood Count report. The main pattern is low hemoglobin with low MCV and low ferritin, which can fit with iron deficiency, but a clinician should confirm the cause.
+
+## Key Measurements
+- Hemoglobin: 10.8 g/dL
+- WBC: 7,600 cells/mcL
+- Platelets: 245,000/mcL
+- MCV: 72 fL
+- Ferritin: 9 ng/mL
+
+## Important Findings
+- Finding: Low hemoglobin
+  Meaning: This can explain tiredness or shortness of breath because the blood may be carrying less oxygen than usual.
+- Finding: Low MCV
+  Meaning: Red blood cells appear smaller than expected, which is commonly seen when iron stores are low.
+- Finding: Low ferritin
+  Meaning: Ferritin reflects stored iron, and this value suggests iron stores may be reduced.
+
+## Medical Terms Explained
+- Hemoglobin: The protein in red blood cells that carries oxygen.
+- MCV: A measure of the average size of red blood cells.
+- Ferritin: A blood marker that reflects stored iron in the body.
+- WBC: White blood cells that help fight infection.
+- Platelets: Blood cells that help with clotting.
+
+## Questions To Ask Your Doctor
+- Could these results suggest iron deficiency?
+- Do I need repeat testing or an iron study?
+- What symptoms should make me seek urgent care?`,
+  kannada: `## Executive Summary
+ಇದು Complete Blood Count ವರದಿಯಂತೆ ಕಾಣುತ್ತದೆ. Hemoglobin, MCV ಮತ್ತು Ferritin ಕಡಿಮೆಯಿರುವ ಮಾದರಿ ಕಂಡುಬರುತ್ತಿದೆ; ಇದು ಐರನ್ ಕೊರತೆಯೊಂದಿಗೆ ಹೊಂದಬಹುದು, ಆದರೆ ಕಾರಣವನ್ನು ವೈದ್ಯರು ದೃಢಪಡಿಸಬೇಕು.
+
+## Key Measurements
+- Hemoglobin: 10.8 g/dL
+- WBC: 7,600 cells/mcL
+- Platelets: 245,000/mcL
+- MCV: 72 fL
+- Ferritin: 9 ng/mL
+
+## Important Findings
+- ಕಂಡುಬಂದ ಅಂಶ: Hemoglobin ಕಡಿಮೆ
+  ಅರ್ಥ: ರಕ್ತವು ಸಾಮಾನ್ಯಕ್ಕಿಂತ ಕಡಿಮೆ ಆಮ್ಲಜನಕ ಹೊತ್ತೊಯ್ಯಬಹುದು, ಇದರಿಂದ ದಣಿವು ಅಥವಾ ಉಸಿರಾಟದ ತೊಂದರೆ ಕಾಣಬಹುದು.
+- ಕಂಡುಬಂದ ಅಂಶ: MCV ಕಡಿಮೆ
+  ಅರ್ಥ: ಕೆಂಪು ರಕ್ತಕಣಗಳು ನಿರೀಕ್ಷಿತಕ್ಕಿಂತ ಚಿಕ್ಕದಾಗಿವೆ; ಇದು ಐರನ್ ಸಂಗ್ರಹ ಕಡಿಮೆಯಾದಾಗ ಸಾಮಾನ್ಯವಾಗಿ ಕಾಣಬಹುದು.
+- ಕಂಡುಬಂದ ಅಂಶ: Ferritin ಕಡಿಮೆ
+  ಅರ್ಥ: Ferritin ದೇಹದ ಐರನ್ ಸಂಗ್ರಹವನ್ನು ತೋರಿಸುತ್ತದೆ, ಮತ್ತು ಈ ಮೌಲ್ಯ ಸಂಗ್ರಹ ಕಡಿಮೆ ಇರಬಹುದು ಎಂದು ಸೂಚಿಸುತ್ತದೆ.
+
+## Medical Terms Explained
+- Hemoglobin: ಕೆಂಪು ರಕ್ತಕಣಗಳಲ್ಲಿ ಆಮ್ಲಜನಕವನ್ನು ಹೊತ್ತೊಯ್ಯುವ ಪ್ರೋಟೀನ್.
+- MCV: ಕೆಂಪು ರಕ್ತಕಣಗಳ ಸರಾಸರಿ ಗಾತ್ರವನ್ನು ತೋರಿಸುವ ಅಳತೆ.
+- Ferritin: ದೇಹದಲ್ಲಿ ಸಂಗ್ರಹವಾಗಿರುವ ಐರನ್ ಪ್ರಮಾಣವನ್ನು ಸೂಚಿಸುವ ರಕ್ತದ ಗುರುತು.
+- WBC: ಸೋಂಕಿನ ವಿರುದ್ಧ ಹೋರಾಡಲು ಸಹಾಯ ಮಾಡುವ ಬಿಳಿ ರಕ್ತಕಣಗಳು.
+- Platelets: ರಕ್ತ ಗಟ್ಟಿಯಾಗಲು ಸಹಾಯ ಮಾಡುವ ರಕ್ತಕಣಗಳು.
+
+## Questions To Ask Your Doctor
+- ಈ ಫಲಿತಾಂಶಗಳು ಐರನ್ ಕೊರತೆಯನ್ನು ಸೂಚಿಸಬಹುದೇ?
+- ಮರುಪರೀಕ್ಷೆ ಅಥವಾ ಐರನ್ ಪರೀಕ್ಷೆ ಅಗತ್ಯವಿದೆಯೇ?
+- ಯಾವ ಲಕ್ಷಣಗಳು ಕಂಡರೆ ತುರ್ತು ವೈದ್ಯಕೀಯ ಸಹಾಯ ಪಡೆಯಬೇಕು?`,
+};
 
 const loadingSteps: Record<ReportLanguage, string[]> = {
   english: [
@@ -236,6 +303,7 @@ const medicalTermAliases: Record<string, string[]> = {
 const uiCopy = {
   english: {
     activeSampleLoaded: "loaded",
+    aiBusyMessage: AI_BUSY_MESSAGE,
     analyze: "Analyze",
     analyzeReport: "Analyze report",
     analyzing: "Analyzing",
@@ -314,8 +382,7 @@ const uiCopy = {
     statusReady: "Explanation ready",
     statusAttention: "Needs attention",
     trustedExplainer: "Trusted medical report explainer",
-    translationError:
-      "Kannada translation could not be generated. English report is still available.",
+    translationError: AI_BUSY_MESSAGE,
     adultMode: "👨 Adult",
     fallbackFinding: "Finding",
     fallbackSummary:
@@ -355,6 +422,7 @@ const uiCopy = {
   },
   kannada: {
     activeSampleLoaded: "ಲೋಡ್ ಆಗಿದೆ",
+    aiBusyMessage: AI_BUSY_MESSAGE_KANNADA,
     analyze: "ವಿಶ್ಲೇಷಿಸಿ",
     analyzeReport: "ವರದಿಯನ್ನು ವಿಶ್ಲೇಷಿಸಿ",
     analyzing: "ವಿಶ್ಲೇಷಿಸಲಾಗುತ್ತಿದೆ",
@@ -433,8 +501,7 @@ const uiCopy = {
     statusReady: "ವಿವರಣೆ ಸಿದ್ಧವಾಗಿದೆ",
     statusAttention: "ಗಮನ ಅಗತ್ಯ",
     trustedExplainer: "ವಿಶ್ವಾಸಾರ್ಹ ವೈದ್ಯಕೀಯ ವರದಿ ವಿವರಣೆಗಾರ",
-    translationError:
-      "ಕನ್ನಡ ಅನುವಾದವನ್ನು ರಚಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಇಂಗ್ಲಿಷ್ ವರದಿ ಲಭ್ಯವಿದೆ.",
+    translationError: AI_BUSY_MESSAGE_KANNADA,
     adultMode: "👨 ವಯಸ್ಕ",
     fallbackFinding: "ಕಂಡುಬಂದ ಅಂಶ",
     fallbackSummary:
@@ -478,6 +545,7 @@ const uiCopy = {
     attention: string;
     activeSampleLoaded: string;
     adultMode: string;
+    aiBusyMessage: string;
     analyze: string;
     analyzeReport: string;
     analyzing: string;
@@ -1489,7 +1557,7 @@ function ExecutiveSummaryPanel({
 
       {translationError ? (
         <p className="mt-3 rounded-lg border border-yellow-200 bg-yellow-50 px-3 py-2 text-sm font-semibold text-yellow-800">
-          {copy.translationError}
+          {translationError}
         </p>
       ) : null}
     </div>
@@ -2030,6 +2098,12 @@ export default function Home() {
     setKannadaStatus("loading");
     setKannadaError("");
 
+    if (DEMO_MODE) {
+      setKannadaResult(demoExplanations.kannada);
+      setKannadaStatus("success");
+      return;
+    }
+
     try {
       const response = await fetch("/api/explain", {
         method: "POST",
@@ -2045,24 +2119,18 @@ export default function Home() {
         }),
       });
 
-      const data = (await response.json()) as ExplainResponse;
+      const data = (await response
+        .json()
+        .catch(() => ({}))) as ExplainResponse;
 
-      if (!response.ok) {
-        throw new Error(data.error || "Kannada translation failed.");
-      }
-
-      if (!data.result) {
-        throw new Error("No Kannada translation was returned.");
+      if (!response.ok || !data.result) {
+        throw new Error(AI_BUSY_MESSAGE);
       }
 
       setKannadaResult(data.result);
       setKannadaStatus("success");
-    } catch (caughtError) {
-      setKannadaError(
-        caughtError instanceof Error
-          ? caughtError.message
-          : "Kannada translation failed."
-      );
+    } catch {
+      setKannadaError(uiCopy.kannada.aiBusyMessage);
       setKannadaStatus("error");
     }
   };
@@ -2093,6 +2161,19 @@ export default function Home() {
     setResult("");
     resetReportViewer(targetLanguage);
 
+    if (DEMO_MODE) {
+      setResult(demoExplanations.english);
+      setGeneratedAt(new Date());
+
+      if (targetLanguage === "kannada") {
+        setKannadaResult(demoExplanations.kannada);
+        setKannadaStatus("success");
+      }
+
+      setStatus("success");
+      return;
+    }
+
     try {
       const response = await fetch("/api/explain", {
         method: "POST",
@@ -2104,14 +2185,12 @@ export default function Home() {
         }),
       });
 
-      const data = (await response.json()) as ExplainResponse;
+      const data = (await response
+        .json()
+        .catch(() => ({}))) as ExplainResponse;
 
-      if (!response.ok) {
-        throw new Error(data.error || "MediSpeak could not analyze this report.");
-      }
-
-      if (!data.result) {
-        throw new Error("No explanation was returned. Please try again.");
+      if (!response.ok || !data.result) {
+        throw new Error(AI_BUSY_MESSAGE);
       }
 
       setResult(data.result);
@@ -2122,12 +2201,8 @@ export default function Home() {
       }
 
       setStatus("success");
-    } catch (caughtError) {
-      setError(
-        caughtError instanceof Error
-          ? caughtError.message
-          : "Something went wrong while analyzing this report."
-      );
+    } catch {
+      setError(uiCopy[targetLanguage].aiBusyMessage);
       setStatus("error");
     }
   };
